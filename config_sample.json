@@ -1,0 +1,16 @@
+{
+  "discord": {
+    "token": "token",
+    "clientid": "1010895517192028280",
+    "name":"RSS"
+  },
+  "RSS": {
+    "links": [
+      "https://support.kuroneko6423.com/feed/",
+      "https://news.kuroneko6423.com/feed/"
+    ]
+  },
+  "mongo": {
+    "link": "mongodb+srv://"
+  }
+}

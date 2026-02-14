@@ -1,0 +1,37 @@
+const { Events, EmbedBuilder, Colors } = require('discord.js');
+const permissions_embed = new EmbedBuilder()
+    .setTitle('⚠️エラー')
+    .setDescription('権限が足りません。\nBOTに権限を与えてください')
+    .setColor(Colors.Red);
+
+module.exports = {
+    name: Events.InteractionCreate,
+    async execute(interaction) {
+        if (interaction.isAutocomplete()) {
+            const command = interaction.client.commands.get(interaction.commandName);
+            if (!command) return;
+
+            try {
+                await command.autocomplete(interaction);
+            } catch (error) {
+                console.error(error);
+            };
+        };
+
+        const command = interaction.client.commands.get(interaction.commandName);
+        if (!command) return;
+
+        try {
+            await command.execute(interaction);
+        } catch (err) {
+            console.log(err)
+            console.log(`[エラー] ${err.message}`);
+            if (err.message === 'Missing Permissions') return await interaction.reply({ embeds: [permissions_embed], ephemeral: true }).catch(() => { });
+            const unknown_embed = new EmbedBuilder()
+                .setTitle('⚠️エラー')
+                .setDescription(`不明なエラーが発生しました。\n詳細:${err.message}\n運営に問い合わせていただけると幸いです。`)
+                .setColor(Colors.Red);
+            await interaction.reply({ embeds: [unknown_embed], ephemeral: true }).catch(() => { });
+        };
+    }
+};
