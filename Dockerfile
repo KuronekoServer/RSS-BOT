@@ -1,15 +1,21 @@
-# ベースイメージを指定
-FROM node:lts
+# ビルドステージ
+FROM golang:1.26-alpine AS build
 
-# コンテナ内の作業ディレクトリを設定
-WORKDIR /app
-# ローカルのpackage.jsonとpackage-lock.jsonをコンテナ内の作業ディレクトリにコピー
-COPY package*.json ./
+WORKDIR /src
+# 依存モジュールを先に取得してキャッシュを効かせる
+COPY go.mod go.sum ./
+RUN go mod download
 
-# npmパッケージのインストール
-RUN npm install
-
-# ローカルのソースコードをコンテナ内の作業ディレクトリにコピー
 COPY . .
+RUN CGO_ENABLED=0 go build -trimpath -ldflags="-s -w" -o /rss-bot .
 
-CMD [ "node","index.js" ]
+# 実行ステージ
+FROM gcr.io/distroless/static-debian12
+
+WORKDIR /app
+COPY --from=build /rss-bot /app/rss-bot
+# config.json があれば同梱 (無い場合は実行時に -v ./config.json:/app/config.json でマウント)
+COPY config*.json ./
+
+ENTRYPOINT ["/app/rss-bot"]
+CMD ["-config", "/app/config.json"]

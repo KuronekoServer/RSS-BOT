@@ -2,15 +2,36 @@
   "discord": {
     "token": "token",
     "clientid": "1010895517192028280",
-    "name":"RSS"
+    "name": "RSS"
+  },
+  "commands": {
+    "admin_only": true,
+    "register": {
+      "name": "rss-start",
+      "description": "このチャンネルでRSS通知を開始します",
+      "message": "保存しました。",
+      "already_message": "登録済み"
+    },
+    "unregister": {
+      "name": "rss-stop",
+      "description": "RSS通知を停止します",
+      "message": "削除しました。",
+      "already_message": "未登録"
+    }
   },
   "RSS": {
     "links": [
-      "https://support.kuroneko6423.com/feed/",
-      "https://news.kuroneko6423.com/feed/"
-    ]
+      "https://support.krnk.org/feed/",
+      "https://news.krnk.org/feed/",
+      "https://jvn.jp/rss/jvn.rdf"
+    ],
+    "interval_minutes": 5,
+    "skip_initial": true,
+    "message_format": "{title}\n{link}",
+    "remove_query_prefixes": ["utm_"]
   },
   "mongo": {
-    "link": "mongodb+srv://"
+    "link": "mongodb+srv://",
+    "database": ""
   }
 }
