@@ -1,5 +1,5 @@
 # ビルドステージ
-FROM golang:1.26-alpine AS build
+FROM golang:1.27-alpine AS build
 
 WORKDIR /src
 # 依存モジュールを先に取得してキャッシュを効かせる
